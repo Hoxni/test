@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Jogging {
@@ -56,5 +57,15 @@ public class Jogging {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Jogging{" +
+                "id=" + id +
+                ", distance=" + distance +
+                ", time=" + time +
+                ", dateTime=" + dateTime +
+                '}';
     }
 }

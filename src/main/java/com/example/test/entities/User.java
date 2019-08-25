@@ -1,7 +1,7 @@
 package com.example.test.entities;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class User {
@@ -14,7 +14,7 @@ public class User {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Collection<Jogging> joggingRecords;
+    private List<Jogging> joggings;
 
     public User() {
     }
@@ -48,11 +48,11 @@ public class User {
         this.password = password;
     }
 
-    public Collection<Jogging> getJoggingRecords() {
-        return joggingRecords;
+    public List<Jogging> getJoggings() {
+        return joggings;
     }
 
-    public void setJoggingRecords(Collection<Jogging> joggingRecords) {
-        this.joggingRecords = joggingRecords;
+    public void setJoggings(List<Jogging> joggings) {
+        this.joggings = joggings;
     }
 }
