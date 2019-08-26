@@ -68,4 +68,20 @@ public class Jogging {
                 ", dateTime=" + dateTime +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Jogging)) return false;
+        Jogging jogging = (Jogging) o;
+        return getDistance() == jogging.getDistance() &&
+                getTime() == jogging.getTime() &&
+                Objects.equals(getId(), jogging.getId()) &&
+                Objects.equals(getDateTime(), jogging.getDateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDistance(), getTime(), getDateTime());
+    }
 }

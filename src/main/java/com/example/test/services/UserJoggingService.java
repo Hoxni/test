@@ -52,7 +52,7 @@ public class UserJoggingService {
     }
 
     public Iterable<Jogging> getUserJoggings(String username) throws UsernameNotFoundException{
-        System.out.println("Get user jogs: " + username);
+        //System.out.println("Get user jogs: " + username);
         User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username));
         return user.getJoggings();
     }

@@ -1,7 +1,6 @@
 package com.example.test.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +19,6 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    @Qualifier("userImpl")
     protected UserDetailsService userDetailsService;
 
     @Autowired
@@ -30,7 +28,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         String token = httpServletRequest.getHeader("Authorization");
-        System.out.println("Filter: " + token);
 
         String username;
 
@@ -39,7 +36,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                System.out.println("UserDetails Filter: " + userDetails.getUsername());
 
                 if (jwtTokenUtils.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

@@ -2,6 +2,7 @@ package com.example.test.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
@@ -54,5 +55,21 @@ public class User {
 
     public void setJoggings(List<Jogging> joggings) {
         this.joggings = joggings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getUsername(), user.getUsername()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getJoggings(), user.getJoggings());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getPassword(), getJoggings());
     }
 }
