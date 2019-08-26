@@ -1,4 +1,4 @@
-package com.example.test.services.utils;
+package com.example.test.statistics;
 
 import java.time.LocalDate;
 

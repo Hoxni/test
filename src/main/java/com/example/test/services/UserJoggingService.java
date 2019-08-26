@@ -4,8 +4,9 @@ import com.example.test.entities.Jogging;
 import com.example.test.entities.User;
 import com.example.test.repositories.JoggingRepository;
 import com.example.test.repositories.UserRepository;
-import com.example.test.services.utils.WeekStatistics;
+import com.example.test.statistics.WeekStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,9 +21,9 @@ public class UserJoggingService {
     @Autowired
     private JoggingRepository joggingRepository;
 
-    public void createJogging(Long userId, Jogging jogging) {
+    public void createJogging(String username, Jogging jogging) {
 
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user = userRepository.findByUsername(username);
         user.ifPresent(value -> {
             value.getJoggings().add(
                     joggingRepository.save(jogging)
@@ -31,37 +32,49 @@ public class UserJoggingService {
         });
     }
 
-    public void deleteJogging(Long userId, Long joggingId) {
+    public void deleteJogging(String username, Long joggingId) {
 
-        Optional<User> user = userRepository.findById(userId);
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username));
         Optional<Jogging> jogging = joggingRepository.findById(joggingId);
-        if (user.isPresent() && jogging.isPresent()){
-            user.get().getJoggings().remove(jogging.get());
-            userRepository.save(user.get());
+        boolean hasJogging = false;
+        for (Jogging j: user.getJoggings()){
+            if (j.getId().equals(joggingId)){
+                hasJogging = true;
+                break;
+            }
+        }
+        if (!hasJogging) throw new NoSuchElementException("User has no jogging with id: " + joggingId);
+        if (jogging.isPresent()){
+            user.getJoggings().remove(jogging.get());
+            userRepository.save(user);
             joggingRepository.deleteById(joggingId);
         }
     }
 
-    public Iterable<Jogging> getUserJoggings(Long userId){
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()){
-            return user.get().getJoggings();
+    public Iterable<Jogging> getUserJoggings(String username) throws UsernameNotFoundException{
+        System.out.println("Get user jogs: " + username);
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username));
+        return user.getJoggings();
+    }
+
+    public void updateUserJogging(String username, Long id, Jogging jogging) {
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username));
+        boolean hasJogging = false;
+        for (Jogging j: user.getJoggings()){
+            if (j.getId().equals(id)){
+                hasJogging = true;
+                break;
+            }
         }
-        return null;
+        if (!hasJogging) throw new NoSuchElementException("User has no jogging with id: " + id);
+        Optional<Jogging> buf = joggingRepository.findById(id);
+        jogging.setId(id);
+        buf.ifPresent(value -> joggingRepository.save(jogging));
     }
 
-    public void updateUserJogging(Long id, Jogging jogging){
+    public Iterable<WeekStatistics> getWeekStatistics(String username){
 
-            Optional<Jogging> buf = joggingRepository.findById(id);
-            jogging.setId(id);
-            buf.ifPresent(value -> {
-                joggingRepository.save(jogging);
-            });
-    }
-
-    public Iterable<WeekStatistics> getWeekStatistics(Long id){
-
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()){
             List<Jogging> joggings = user.get().getJoggings();
             joggings.sort(Comparator.comparing(Jogging::getDateTime));
