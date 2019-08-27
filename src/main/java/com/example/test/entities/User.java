@@ -1,7 +1,8 @@
 package com.example.test.entities;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
@@ -14,7 +15,7 @@ public class User {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Collection<Jogging> joggingRecords;
+    private List<Jogging> joggings;
 
     public User() {
     }
@@ -48,11 +49,27 @@ public class User {
         this.password = password;
     }
 
-    public Collection<Jogging> getJoggingRecords() {
-        return joggingRecords;
+    public List<Jogging> getJoggings() {
+        return joggings;
     }
 
-    public void setJoggingRecords(Collection<Jogging> joggingRecords) {
-        this.joggingRecords = joggingRecords;
+    public void setJoggings(List<Jogging> joggings) {
+        this.joggings = joggings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getUsername(), user.getUsername()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getJoggings(), user.getJoggings());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getPassword(), getJoggings());
     }
 }

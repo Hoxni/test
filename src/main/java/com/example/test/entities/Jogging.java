@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Jogging {
@@ -56,5 +57,31 @@ public class Jogging {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Jogging{" +
+                "id=" + id +
+                ", distance=" + distance +
+                ", time=" + time +
+                ", dateTime=" + dateTime +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Jogging)) return false;
+        Jogging jogging = (Jogging) o;
+        return getDistance() == jogging.getDistance() &&
+                getTime() == jogging.getTime() &&
+                Objects.equals(getId(), jogging.getId()) &&
+                Objects.equals(getDateTime(), jogging.getDateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDistance(), getTime(), getDateTime());
     }
 }
