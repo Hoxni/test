@@ -101,13 +101,14 @@ public class UserJoggingService {
     }
 
     private WeekStatistics createWeekStatistics(List<Jogging> list){
-        int averageTime = 0;
-        int averageSpeed;
+        double averageTime = 0;
+        double averageSpeed;
         int totalDistance = 0;
         for (Jogging jogging: list){
             averageTime += jogging.getTime();
             totalDistance += jogging.getDistance();
         }
+
         averageSpeed = totalDistance / averageTime;
         averageTime /= list.size();
 

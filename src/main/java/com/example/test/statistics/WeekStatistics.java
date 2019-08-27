@@ -7,14 +7,14 @@ public class WeekStatistics {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private int averageSpeed;
-    private int averageTime;
+    private double averageSpeed;
+    private double averageTime;
     private int totalDistance;
 
     public WeekStatistics() {
     }
 
-    public WeekStatistics(LocalDate startDate, LocalDate endDate, int averageSpeed, int averageTime, int totalDistance) {
+    public WeekStatistics(LocalDate startDate, LocalDate endDate, double averageSpeed, double averageTime, int totalDistance) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.averageSpeed = averageSpeed;
@@ -38,7 +38,7 @@ public class WeekStatistics {
         this.endDate = endDate;
     }
 
-    public int getAverageSpeed() {
+    public double getAverageSpeed() {
         return averageSpeed;
     }
 
@@ -46,7 +46,7 @@ public class WeekStatistics {
         this.averageSpeed = averageSpeed;
     }
 
-    public int getAverageTime() {
+    public double getAverageTime() {
         return averageTime;
     }
 
