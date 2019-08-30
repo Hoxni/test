@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -70,6 +71,8 @@ public class UserJoggingServiceTest {
 		List<WeekStatistics> weekStatistics =
 				(List<WeekStatistics>) userJoggingService.getWeekStatistics("user");
 
+		weekStatistics.sort(Comparator.comparing(WeekStatistics::getStartDate));
+
 		Assert.assertEquals(2, weekStatistics.get(0).getAverageTime(), 0.0);
 		Assert.assertEquals(2, weekStatistics.get(1).getAverageTime(), 0.0);
 		Assert.assertEquals(1, weekStatistics.get(2).getAverageTime(), 0.0);
@@ -80,6 +83,8 @@ public class UserJoggingServiceTest {
 	public void shouldCalculateAverageDistanceForWeekStatisticsCorrectly() {
 		List<WeekStatistics> weekStatistics =
 				(List<WeekStatistics>) userJoggingService.getWeekStatistics("user");
+
+		weekStatistics.sort(Comparator.comparing(WeekStatistics::getStartDate));
 
 		Assert.assertEquals(2, weekStatistics.get(0).getAverageTime(), 0.0);
 		Assert.assertEquals(2, weekStatistics.get(1).getAverageTime(), 0.0);
@@ -92,6 +97,8 @@ public class UserJoggingServiceTest {
 		List<WeekStatistics> weekStatistics =
 				(List<WeekStatistics>) userJoggingService.getWeekStatistics("user");
 
+		weekStatistics.sort(Comparator.comparing(WeekStatistics::getStartDate));
+
 		Assert.assertEquals(LocalDate.of(2019, 7, 1), weekStatistics.get(0).getStartDate());
 		Assert.assertEquals(LocalDate.of(2019, 8, 1), weekStatistics.get(1).getStartDate());
 		Assert.assertEquals(LocalDate.of(2019, 9, 1), weekStatistics.get(2).getStartDate());
@@ -102,6 +109,8 @@ public class UserJoggingServiceTest {
 	public void shouldSetEndDateOfWeekCorrectly(){
 		List<WeekStatistics> weekStatistics =
 				(List<WeekStatistics>) userJoggingService.getWeekStatistics("user");
+
+		weekStatistics.sort(Comparator.comparing(WeekStatistics::getStartDate));
 
 		Assert.assertEquals(LocalDate.of(2019, 7, 3), weekStatistics.get(0).getEndDate());
 		Assert.assertEquals(LocalDate.of(2019, 8, 3), weekStatistics.get(1).getEndDate());

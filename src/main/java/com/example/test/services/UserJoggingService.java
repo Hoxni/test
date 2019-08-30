@@ -77,23 +77,24 @@ public class UserJoggingService {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()){
             List<Jogging> joggings = user.get().getJoggings();
-            joggings.sort(Comparator.comparing(Jogging::getDateTime));
+
+            Map<Integer, List<Jogging>> weeks = new HashMap<>();
             List<WeekStatistics> weekStatistics = new ArrayList<>();
 
-            int weekNum = joggings.get(0).getDateTime().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-            List<Jogging> buff = new ArrayList<>();
-
             for(Jogging jogging: joggings){
-                if (jogging.getDateTime().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) == weekNum){
-                    buff.add(jogging);
+                int weekNum = jogging.getDateTime().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+                if (weeks.containsKey(weekNum)){
+                    weeks.get(weekNum).add(jogging);
                 } else {
-                    weekStatistics.add(createWeekStatistics(buff));
-                    buff.clear();
-                    buff.add(jogging);
-                    weekNum = jogging.getDateTime().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+                    List<Jogging> list = new ArrayList<>();
+                    list.add(jogging);
+                    weeks.put(weekNum, list);
                 }
             }
-            weekStatistics.add(createWeekStatistics(buff));
+
+            for (List<Jogging> list: weeks.values()) {
+                weekStatistics.add(createWeekStatistics(list));
+            }
 
             return weekStatistics;
         }
@@ -112,8 +113,10 @@ public class UserJoggingService {
         averageSpeed = totalDistance / averageTime;
         averageTime /= list.size();
 
-        LocalDate startDate = list.get(0).getDateTime().toLocalDate();
-        LocalDate endDate = list.get(list.size() - 1).getDateTime().toLocalDate();
+        LocalDate startDate = Collections.min(list, Comparator.comparing(Jogging::getDateTime))
+                .getDateTime().toLocalDate();
+        LocalDate endDate = Collections.max(list, Comparator.comparing(Jogging::getDateTime))
+                .getDateTime().toLocalDate();
 
         return new WeekStatistics(startDate, endDate, averageSpeed, averageTime, totalDistance);
     }
